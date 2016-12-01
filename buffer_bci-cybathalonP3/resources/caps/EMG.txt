@@ -1,0 +1,5 @@
+left1	-50	-28
+left2	-50	28
+right1	50	28
+right2	50	-28
+ref1    0 0
