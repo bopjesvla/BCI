@@ -12,21 +12,21 @@ We set out to build a BCI employing Bayesian prediction and classification of se
 
 ## Introduction
 
+The Cybathlon BCI Race is a novel game competition where contestants control a virtual avatar that has to cross a two-dimensional race track as quick as possible. It differs from a traditional game in that choosing the correct action for your avatar at any given moment is trivial, but informing the game of the action you intend your avatar to perform is not, as players are only allowed to communicate through a brain-computer interface.
+
 https://www.extremetech.com/wp-content/uploads/2016/09/cybathlon-bci-race-screencap-640x424.png
 
-The Cybathlon BCI Race is a novel game competition where contestants control an avatar that has four actions available: *jump*, *speed*, *slide* and *rest*. It differs from a traditional game in that choosing the correct action is trivial, but informing the game of the action you intend your avatar to perform is not, as players are only allowed to communicate through a brain-computer interface.
+The four box types shown in the screenshot above directly correspond to the four available actions: *slide*, *jump*, *speed*, and *rest*. If an avatar (continuously) performs the action that matches the box, it traverses the box in roughly ??? seconds. If it (continuously) performs any other action, it instead traverses the box in ??? seconds. The exception is the grey box, for which the speed bonus for selecting the correct action *rest* is significantly lower.
 
-More specifically, box types directly correspond to the correct actions. For example, if an avatar continuously performs the *rest* action on a grey box, it traverses the box in roughly ??? seconds. If it continuously performs any other action, it instead traverses the box in ??? seconds. The colored boxes have similar characteristics, except for the fact that the bonus for choosing the correct actions is significantly higher there. An avatar that correctly performs the *slide*, *jump*, or *speed* action can traverse a box in a mere 2??? seconds.
-
-Within the constraints set by BCI, contestants are free to use any input modality of their choosing. As simply subvocalizating commands typically does not yield great results, most contestants opt for a proxy instead. Buffer BCI**, the framework we based our implementation on, defaults to labels for imagined movement:
+Within the constraints set by BCI, contestants are free to use any input modality of their choosing. As straightforward approaches like internal speech typically do not yield great results, most contestants instead opt for a proxy. Buffer BCI**, the framework we based our implementation on, defaults to labels for imagined movement:
 
 [training screenshot]
 
-Imagined movement is a popular proxy since ...
-
 ## Ideas
 
-We first investigated the possibility of improving the Buffer BCI by changing the modality. We limited our search to tasks that modulate the alpha band, since these are the easiest to pick up using EEG [cit]. Sensory anticipation grabbed our attention because... both motor cortex somatosoric cortex [cit], contrast IM, to our knowledge no BCI using this
+We first investigated the possibility of improving the Buffer BCI by changing the task from imagined movement, which produces mu/beta ERDs [cit], to a task that alters the power of the alpha band, since alpha waves are the easiest to pick up using EEG [cit???].
+
+Anticipation of tactile events grabbed our attention because it causes both motor cortex somatosoric cortex [cit], contrast IM, to our knowledge no BCI using this
 
 Pain, prospect strong reaction, distortions homunculus, ethics, anticipation to vibration easier
 
