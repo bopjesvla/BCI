@@ -1,4 +1,7 @@
-(niet schrikken dit is niet alles, de rest staat ergens anders)
+ik in Word:
+
+- Citaties
+- Plaatjes plakken
 
 # BCI report
 
@@ -55,10 +58,38 @@ While working on the Bayesian prediction, we realized that by cycling through th
 
 ## Implementation
 
-To train the classifier using the BCI race, we had to know the current box type, which matches the current classification category, at any given point in time. Unfortunately, the BCI race does not expose any API, so we were forced to extract color data from the game to determine the box type. Luckily, the camera angle is constant when only one person plays the game, so we used Python to extract data from the Cybathlon window at the coordinate that always pointed to the front side of the box below the avatar.
+__Tactile Anticipation__
 
-During training, we also wanted to 
+To train the classifier using the BCI race, we had to know the current box type, which matches the current classification category, at any given point in time. Unfortunately, the BCI race does not expose any API, so we were forced to extract color data from the screen to determine the box type. Luckily, the camera angle was constant when only one person played the game, so we used Python to extract data from the Cybathlon window at the coordinate that always pointed to the front side of the box directly below the avatar, provided that the ??? resolution was selected.
+
+[something more in-depth about the echo client???]
+
+Vibration was generated using Arduino motors, kindly supplied by the New Tech Lab???. The Arduino program received changes in box type over the serial port, and periodically quickly rotated the motor in the left, right, or both hands based on the latest signal.
+
+Although we are confident we got all of this working based on test data, we were never able to use it in practice because of time constraints and hardware failure and unavailability. The implementation lives on github in the master branch of bopjesvla/BCI.
+
+__Bayesian Prediction & Zero Input Strategy__
+
+Both Bayesian prediction and the zero input strategy were fully implemented in Matlab, by altering the prediction strategy in `imEpochFeedbackCybathalon.m`. We also implemented a cross-over strategy, which performs Bayesian prediction on two categories, *rest* and cycling. In our final time registration, the racer performed left-hand imagined movement for *rest*, and right-hand imagined movement for cycling.
 
 ## Results
 
+__Official times__
+
+Bayesian:
+Cycling:
+Cross-over:
+
+__Recorded Bayesian Times__
+
+__Recorded Random Times__
+
+__Recorded Cross-Over Times__
+
 ## Planning
+
+## Literature
+
+## Appendix A
+
+Picture of Matthijs' formalization, note the tp/fp mistake
