@@ -70,7 +70,7 @@ Although we are confident we got all of this working based on test data, we were
 
 __Bayesian Prediction & Zero Input Strategy__
 
-Both Bayesian prediction and the zero input strategy were fully implemented in Matlab, by altering the prediction strategy in `imEpochFeedbackCybathalon.m`. We also implemented a cross-over strategy, which performs Bayesian prediction on two categories, *rest* and cycling. In our final time registration, the racer performed left-hand imagined movement for *rest*, and right-hand imagined movement for cycling.
+Both Bayesian prediction and the zero input strategy were fully implemented in Matlab, by altering the prediction strategy in `imEpochFeedbackCybathalon.m`. We also implemented a cross-over strategy, which performs Bayesian prediction on two categories, rest and cycling. In our final time registration, the racer performed left-hand imagined movement for rest, and right-hand imagined movement for cycling.
 
 ## Results
 
