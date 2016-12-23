@@ -21,7 +21,7 @@ https://www.extremetech.com/wp-content/uploads/2016/09/cybathlon-bci-race-screen
 
 Fig 1. The BCI race
 
-The three colored box types shown in the screenshot above directly correspond to three of the four available actions: *slide*, *jump*, and *speed*. If an avatar continuously performs the action that matches the box, it traverses the box in roughly 2 seconds. If it continuously performs any other action, it instead traverses the box in 18 seconds. The exception is the *rest* action, which always causes the avatar to traverse a colored box in 11 seconds and a grey box in 5 seconds.
+The box types shown in the screenshot above directly correspond to the four available actions: *slide*, *jump*, *speed*, and *rest*. If an avatar continuously performs the action that matches the box, it traverses the box in roughly 2 seconds, except on the grey box, which a resting avatar traverses in 5 seconds. If it continuously performs *rest* on any other box, the avatar traverses the box in 11 seconds. If it performs any other action, it instead traverses the box in 18 seconds.
 
 Within the constraints set by BCI, contestants are free to use any input modality of their choosing. As straightforward approaches like internal speech typically do not yield great results, most contestants instead opt for a proxy.
 
@@ -48,12 +48,11 @@ In the end, we opted for vibration as it is purely tactile, like the Braille cel
 
 __Bayesian Prediction__
 
-The optimal action is not necessarily the action the classifier thinks is most likely the intended action. For example, given the classifiers entries X and Y, according to Bayes' theorem (Olshausen), [simple two-class example using real traversal times???]
+We used Bayesian Probability logic to determine the probability for each command that that command was the task intended by the participant, based on the classifier results over a small period of time (3 seconds) and the accuracy of each class in the classifier. Given the probabilities of these commands and the speeds they result in when they are correct or incorrect, we can calculate the expected speed of the avatar for each command and send the one with the highest expected speed to the game.
 
-We used Bayesian Probability logic to determine the probability for each command that that command was the task intended by the participant, based on the classifier results over a small period of time (3 seconds) and the accuracy of each class in the classifier. Given the probabilities of these commands and the speeds they result in when they are correct or incorrect, we can calculate the expected speed of the avatar for each command and send the one with the highest expected speed to the game. For example, say that over a period of 3 seconds the classifier returns the predictions *speed*, *jump*, *speed*. If the specificity of the *speed* command is high and the specificity for the *jump* command is low, the expected speed of the avatar when sending *speed* to the game will probably be highest, therefor the agent sends *speed* to the game. On the other hand if the specificity for the *speed* command is low and the specificity for the *jump* command is high, the amount of uncertainty about the intended command will probably be too high and the expected speed for *rest* will be highest. Therefor the agent would not send a command to the game.
+For example, say that over a period of 3 seconds the classifier returns the predictions *speed*, *jump*, *speed*. If the specificity of the *speed* command is high and the specificity for the *jump* command is low, the expected speed of the avatar when sending *speed* to the game will probably be highest, therefore the agent sends *speed* to the game. On the other hand if the specificity for the *speed* command is low and the specificity for the *jump* command is high, the amount of uncertainty about the intended command will probably be too high and the expected speed for *rest* will be highest. Therefore the agent would not send a command to the game.
 
-
-A full pen-and-paper formalization can be found in Appendix A.
+A full pen-and-paper formalization of our prediction strategy can be found in Appendix A.
 
 __Zero Input Strategy__
 
@@ -73,21 +72,68 @@ Although we are confident we got all of this working based on test data, we were
 
 __Bayesian Prediction & Zero Input Strategy__
 
-Both Bayesian prediction and the zero input strategy were fully implemented in Matlab, by altering the prediction strategy in `imEpochFeedbackCybathalon.m`. We also implemented a semi-random strategy, which classified between only two categories, rest and cycling. When the rest category was detected, the agent sent no command to the game, when the cycling category was detected, the agent cycled through the three commands with 2 second intervals. In our final time registration, the racer performed imagined movement on the entire left side of their body for rest, and imagined movement on the entire right side of their body for cycling.
+Both Bayesian prediction and the zero input strategy were fully implemented in Matlab, by altering the prediction strategy in `imEpochFeedbackCybathalon.m`.
+
+We also implemented a semi-random strategy, which classified between only two categories, rest and cycling. When the rest category was detected, the agent sent no command to the game, when the cycling category was detected, the agent cycled through the three commands with 2 second intervals. In our final time registration, the racer performed imagined movement on the entire left side of their body for rest, and imagined movement on the entire right side of their body for cycling. Buffer BCI enforced a minimum of three categories because of a bug we were unable to resolve, so we used two identical categories for the right side of the body.
+
+## Experiment
+
+We compared the performance of our three strategies to both the default imagined movement strategy and the performance of the Cybathlon 2016 BCI Race finalists. 
+
+For the Bayesian and IM strategies, we trained the classifier using the default Buffer BCI training. For the semi-random strategy, we altered the categories as described above.
+
+After each training, we recorded the times of four sequential unofficial races per strategy, in addition to one registered time per strategy. Every strategy was tested in a different week as we were still implementing new things in the last few sessions. Also, since our most BCI-literate member was unavailable during the last session, the semi-random times were performed by another racer.
+
+We also tested the random strategy five times.
 
 ## Results
 
-__Official times__
+<small>in seconds, official times in ***bold italic***</small>
 
-Bayesian: 133 seconds
-Cycling: 126 seconds
-Semi-random: 118 seconds
+__Recorded Imagined Movement Times__
+
+Classifier performance: unknown
+
+162.24
+210.56
+183.92
+193.47
+187.51
 
 __Recorded Bayesian Times__
 
+Classifier performance: 33% over four categories
+
+196.38
+140.66
+105.63
+145.98
+***133.98***
+
 __Recorded Random Times__
 
-__Recorded Cross-Over Times__
+126.27
+140.32
+100.23
+118.14
+121.06
+
+__Recorded Semi-Random Times__
+
+Classifier performance: 34% over three categories
+
+125.09
+149.26
+102.32
+116.55
+***118.11***
+
+__Cybathlon 2016 BCI Race Finals__ (taken from http://blog.gtec.at/brain-tweakers-won-bci-race-2016/)
+
+125.23
+156.33
+161.15
+170 (low estimate)
 
 ## Planning
 
