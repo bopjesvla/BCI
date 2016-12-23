@@ -38,7 +38,7 @@ We first investigated the possibility of improving the Buffer BCI by changing th
 
 Of everything we came across that could affect the alpha band, anticipation of tactile stimuli seemed most promising. Spatial orientation produces a suppression of contralateral sensorimotor alpha and beta band oscillations, so anticipation of a tactile event on the left hand can clearly be distinguished from anticipation of an event on the right (van der Ede). We hypothesized that once a person had been conditioned to expect a spatially specific stimulus depending on the type of box their avatar is on, they would automatically produce the correct brain signals, and we wouldn't risk our brain racer messing up the commands. We also suspected that conditioning people into expecting certain tactile events on certain boxes is quicker and requires less of their effort than internalizing a mapping such as the one in figure 2.
 
-Since the Cybathlon rules prohibit real tactile stimuli during the race, we worried our racer might only anticipate stimulation during training, when it actually occurs, and not during the official race, when the racer knows they won't be stimulated. To counter this, we trained using multiple real BCI races as shown in figure 1 as opposed to a schematic representation shown in figure 2. This way, feedback is implicit in the task, because the user observes whether the avatar speeds up or slows down. Stimulation would occur at random frequency, on the left hand, right hand, or both, depending on the color of the box they were on, or not at all, if they were on a grey box. At the start of the training (taking place over multiple race sessions), stimulation would be frequent, but as the training progressed, the rate would dwindle down to one or two tactile stimuli per race. Then, without notifying the racer, we would request a time registration and turn off the biofeedback device. If everything went right, the racer would still anticipate a stimulus throughout the official race even though they could not receive one. The student-assistants agreed to cooperate on this.
+Since the Cybathlon rules prohibit real tactile stimuli during the race, we worried our racer might only anticipate stimulation during training, when it actually occurs, and not during the official race, when the racer knows they won't be stimulated. To counter this, we planned to train using multiple real BCI races as shown in figure 1 instead of a schematic representation shown in figure 2. Stimulation would occur at random intervals on the left hand, right hand, or both, depending on the color of the box they were on, or not at all, if they were on a grey box. At the start of the training, stimulation would be frequent, but as the training progressed, the rate would dwindle down to one or two tactile stimuli per race. Then, without notifying the racer, we would request a time registration and turn off the stimulators. If everything went right, the racer would still anticipate a stimulus throughout the official race even though they could not receive one. The student-assistants agreed to cooperate on this.
 
 Training using the BCI race has the additional benefit that the neurofeedback takes the same form during training as during the official race, namely avatar speed. This means that the training would not only condition the racer to generate certain anticipatory brain signals in response to certain situations, but it also teaches the racer to change their brain signals whenever their avatar moves slowly, for example by increasing their attention to where they expect the stimulus.
 
@@ -56,19 +56,7 @@ A full pen-and-paper formalization of our prediction strategy can be found in Ap
 
 __Zero Input Strategy__
 
-While working on the Bayesian prediction, we realized that by cycling through the *slide*, *jump*, and *speed* commands every 6 seconds (2 seconds per command), the avatar could traverse every colored box between 2 and 6 seconds, at the cost of traversing grey boxes in 18 seconds. Assuming one in four boxes are grey and the race track consists of 14 boxes, the avatar takes 126 seconds to cross the finish line on average, which matches the top Cybathlon 2016 time. This on it's own isn't a BCI though, so we would choose to use 2 classes. Either "rest" or "active".
-
-## Implementation
-
-__Tactile Anticipation__
-
-To train the classifier using the BCI race, we had to know the current box type, which matches the current classification category, at any given point in time. Unfortunately, the BCI race does not expose any API, so we were forced to extract color data from the screen to determine the rail car type. Luckily, the camera angle can be locked to your player so we wrote a Python script to extract data from the Cybathlon window at the coordinate that always pointed to the front side of the box directly below the avatar. Because the lighting in the game was not one even colour on the entirity of a rail car, the class was selected that was closest to the found colour.
-
-This Python script also communicated with the sensors, in order to create a tactile sensation for a certain class with a given chance. Furthermore, in order to train the classifier this script also communicated with the FieldTripBuffer in the same way that the provided abstract BCI trainer did, so the data could be used.
-
-Vibration was generated using servos controlled by an Arduino, kindly supplied by the New Devices Lab in Mercator 1. The Arduino program listened on serial port for the action to perform (the Python script decides if given a rail car class an actual vibration has to be generated, the Arduino just functions as an interface between the script and the servos) and periodically quickly rotated the motor strapped to the left, right, or both hands based on the latest signal.
-
-We are confident we got all of this working based on test data, but our time record was not set using the tactile anticipation method. This is because we were, at the time, more concerned with setting a base line time to work on, since time was running out. The implementation lives on github in the master branch of bopjesvla/BCI.
+While working on the Bayesian prediction, we realized that by cycling through the *slide*, *jump*, and *speed* commands every 6 seconds (2 seconds per command), the avatar could traverse every colored box between 2 and 6 seconds, at the cost of traversing grey boxes in 18 seconds. Assuming one in four boxes are grey and the race track consists of 14 boxes, the avatar takes 126 seconds to cross the finish line on average, which matches the top Cybathlon 2016 time.
 
 ## Implementation
 
@@ -90,9 +78,9 @@ We also implemented a semi-random strategy, which classified between only two ca
 
 ## Experiment
 
-We compared the performance of our three strategies to two null conditions: the default imagined movement strategy and the performance of the population of Cybathlon 2016 BCI Race finalists. The latter was mainly included to see if our random strategy performed better on average than the finalists.
+We compared the performance of our three strategies to two baseline conditions: the default imagined movement strategy and the performance of the population of Cybathlon 2016 BCI Race finalists. The latter was mainly included to see if our random strategy performed better on average than the finalists.
 
-For the Bayesian and IM strategies, we trained the classifier using the default Buffer BCI training. For the semi-random strategy, we altered the categories as described above.
+For the Bayesian and default strategies, we trained the classifier using the default Buffer BCI training. For the semi-random strategy, we altered the categories as described above.
 
 After each training, we recorded the times of four sequential unofficial races per strategy, in addition to one registered time per strategy. Every strategy was tested in a different session as we implemented two of them in the last few sessions, but they were all performed by the same racer.
 
@@ -102,7 +90,7 @@ The random strategy was tested five times without any input.
 
 <small>in seconds, official times in ***bold italic***</small>
 
-__Recorded Imagined Movement Times__
+__Recorded Baseline Times__
 
 Classifier performance: unknown
 
@@ -163,13 +151,15 @@ Semi-Rnd vs Prof   nonsignificant
 
 ## Conclusions
 
-We found a significant difference in performance between the five categories. In particular, we found that all of our strategies performed significantly better than our test with imagined movement. Although we failed to record the classifier performance during the imagined movement test, we are quite sure it was higher than the classifier performance in the Bayesian test. It was definitely higher than the classifier performance in the semi-random test, which is effectively random with a strong bias for cycling.
+We found a significant difference in performance between the five categories. In particular, we found that all of our strategies performed significantly better than the default Buffer BCI strategy. Although we failed to record the classifier performance during the imagined movement test, we are quite sure it was higher than the classifier performance in the Bayesian test. It was definitely higher than the classifier performance in the semi-random test, which is effectively random with a strong bias for cycling.
 
-We did not find a significant difference in performance between the random strategy and the official Cybathlon times, but this may be due to the small sample sizes. In any case, it seems unlikely that the official Cybathlon racers perform better than the random strategy. The average performance using the cycling strategy lies two standard deviations ahead of the average finalist.
+We did not find a significant difference in performance between the random strategy and the official Cybathlon times, but this may be due to the small sample sizes. In any case, it seems unlikely that the official Cybathlon racers perform better than the cycling strategy. The average cycling performance lies two standard deviations ahead of the average finalist.
 
-This means that, as it stands, the BCI Race does not meet the Cybathlon's stated goal, "testing the reliability and precision of BCI technology".
+This means that as it stands, the BCI Race does not meet the goal stated on the Cybathlon website, "testing the reliability and precision of BCI technology".
 
 ## Planning
+
+
 
 ## Literature
 
