@@ -1,16 +1,23 @@
 configureIM;
 % add the generic im experiment directory for the generic stimulus files
 addpath('../imaginedMovement');
-
 initgetwTime;
 initsleepSec;
+
+if ( exist('runwayFeedbackTrialDuration') && ~isempty(runwayFeedbackTrialDuration) )
+  contFeedbackTrialDuration=runwayFeedbackTrialDuration;
+end
+if ( ~exist('contFeedbackTrialDuration') || isempty(contFeedbackTrialDuration) )
+  contFeedbackTrialDuration=trialDuration;
+end;
+
 
 % pre-build the time-line for the whole experiment
 tgtSeq=mkStimSeqRand(nSymbs,nSeq);
 % insert the rest between tgts to make a complete stim sequence + event seq with times
-trlEP   = (trialDuration+baselineDuration+intertrialDuration)./epochDuration;
+trlEP   = (contFeedbackTrialDuration+baselineDuration+intertrialDuration)./epochDuration;
 stimSeq = zeros(size(tgtSeq,1)+1,size(tgtSeq,2)*trlEP);
-%zeros(size(tgtSeq,1)+1,size(tgtSeq,2)*(trialDuration+baselineDuration+intertrialDuration)./epochDuration);										  
+%zeros(size(tgtSeq,1)+1,size(tgtSeq,2)*(contFeedbackTrialDuration+baselineDuration+intertrialDuration)./epochDuration);										  
 stimTime=(0:size(stimSeq,2))*epochDuration; % stimulus times										  
 eventSeq=true(1,size(stimSeq,2));           % when to send events
 
@@ -39,28 +46,28 @@ visT0    = 0; % absolute time visible fragement of the image starts
 visEnd   = 0; % index of the end of the valid part of the image
 
 										  % render stimSeq into the visImage
-  epI=[];
-  for fi=visEnd+1:size(visImg,2); % render into the frameBuffer
-	 visImg(:,fi,:) = repmat(bgColor,size(visImg,1),1); % start as background color
-	 starttfi= visT0+(fi-1)*frameDuration; % start time for the current frame
-	 % find which epoch contains this frame
-	 if ( isempty(epI) ) 
-		epI=find(starttfi>=stimTime,1,'last');
-	 else
-		if ( starttfi>=stimTime(min(end,epI+1)) ) epI=epI+1; end % move to next epoch of needed
-	 end
-	 if ( ~isempty(epI) && epI<size(stimSeq,2) )
-		ss=stimSeq(:,epI);
-		if ( any(ss>0) ) % set target cols
-		  if ( ss(end) ) % rest
-			 visImg(:,fi,:)             =repmat(fixColor,nSymbs,1);
-		  else % tgt
-			 visImg(ss(1:nSymbs)>0,fi,:)=repmat(tgtColor,sum(ss(1:nSymbs)>0),1);
-		  end
+epI=[];
+for fi=visEnd+1:size(visImg,2); % render into the frameBuffer
+  visImg(:,fi,:) = repmat(bgColor,size(visImg,1),1); % start as background color
+  starttfi= visT0+(fi-1)*frameDuration; % start time for the current frame
+										  % find which epoch contains this frame
+  if ( isempty(epI) ) 
+	 epI=find(starttfi>=stimTime,1,'last');
+  else
+	 if ( starttfi>=stimTime(min(end,epI+1)) ) epI=epI+1; end % move to next epoch of needed
+  end
+  if ( ~isempty(epI) && epI<size(stimSeq,2) )
+	 ss=stimSeq(:,epI);
+	 if ( any(ss>0) ) % set target cols
+		if ( ss(end) ) % rest
+		  visImg(:,fi,:)             =repmat(fixColor,nSymbs,1);
+		else % tgt
+		  visImg(ss(1:nSymbs)>0,fi,:)=repmat(tgtColor,sum(ss(1:nSymbs)>0),1);
 		end
 	 end
   end
-  visEnd=fi; % update the end valid-data indicator
+end
+visEnd=fi; % update the end valid-data indicator
 
 
 % make the stimulus
