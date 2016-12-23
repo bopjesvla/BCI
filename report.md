@@ -11,7 +11,7 @@ Bob de Ruiter
 
 __Summary__
 
-We set out to build a BCI employing Bayesian prediction and classification of sensory anticipation. In addition, we discovered a Cybathlon BCI Race strategy that does not rely on any input, brain signals or otherwise, that consistently outperforms the world's best BCI racers.
+We set out to build a BCI employing Bayesian prediction and classification of sensory anticipation. In addition, we discovered a Cybathlon BCI Race strategy that does not rely on any input, brain signals or otherwise, that may outperform the world's best BCI racers.
 
 ## Introduction
 
@@ -56,7 +56,7 @@ A full pen-and-paper formalization of our prediction strategy can be found in Ap
 
 __Zero Input Strategy__
 
-While working on the Bayesian prediction, we realized that by cycling through the *slide*, *jump*, and *speed* commands every 6 seconds (2 seconds per command), the avatar could traverse every colored box between 2 and 6 seconds, at the cost of traversing grey boxes in 18 seconds. Assuming one in four boxes are grey and the race track consists of 14 boxes, the avatar takes 126 seconds to cross the finish line on average, well below the official Cybathlon 2016 times.
+While working on the Bayesian prediction, we realized that by cycling through the *slide*, *jump*, and *speed* commands every 6 seconds (2 seconds per command), the avatar could traverse every colored box between 2 and 6 seconds, at the cost of traversing grey boxes in 18 seconds. Assuming one in four boxes are grey and the race track consists of 14 boxes, the avatar takes 126 seconds to cross the finish line on average, which matches the top Cybathlon 2016 time.
 
 ## Implementation
 
@@ -78,13 +78,13 @@ We also implemented a semi-random strategy, which classified between only two ca
 
 ## Experiment
 
-We compared the performance of our three strategies to both the default imagined movement strategy and the performance of the Cybathlon 2016 BCI Race finalists. 
+We compared the performance of our three strategies to two null conditions: the default imagined movement strategy and the performance of the population of Cybathlon 2016 BCI Race finalists. The latter was mainly included to see if our random strategy performed better on average than the finalists.
 
 For the Bayesian and IM strategies, we trained the classifier using the default Buffer BCI training. For the semi-random strategy, we altered the categories as described above.
 
-After each training, we recorded the times of four sequential unofficial races per strategy, in addition to one registered time per strategy. Every strategy was tested in a different week as we were still implementing new things in the last few sessions. Also, since our most BCI-literate member was unavailable during the last session, the semi-random times were performed by another racer.
+After each training, we recorded the times of four sequential unofficial races per strategy, in addition to one registered time per strategy. Every strategy was tested in a different session as we implemented two of them in the last few sessions, but they were all performed by the same racer.
 
-We also tested the random strategy five times.
+The random strategy was tested five times without any input.
 
 ## Results
 
@@ -128,12 +128,34 @@ Classifier performance: 34% over three categories
 116.55
 ***118.11***
 
-__Cybathlon 2016 BCI Race Finals__ (taken from http://blog.gtec.at/brain-tweakers-won-bci-race-2016/)
+__Cybathlon 2016 BCI Race Finals__ (times taken from the video at http://blog.gtec.at/brain-tweakers-won-bci-race-2016/)
 
 125.23
 156.33
 161.15
-170 (low estimate)
+170 (friendly estimate)
+
+[ANOVA]
+
+HSD[.05]=41.78; HSD[.01]=52.47
+IM vs Bayesian   P<.05
+IM vs Random   P<.01
+IM vs Semi-Rnd   P<.01
+IM vs Prof   nonsignificant
+Bayesian vs Random   nonsignificant
+Bayesian vs Semi-Rnd   nonsignificant
+Bayesian vs Prof   nonsignificant
+Random vs Semi-Rnd   nonsignificant
+Random vs Prof   nonsignificant
+Semi-Rnd vs Prof   nonsignificant
+
+## Conclusions
+
+We found a significant difference in performance between the five categories. In particular, we found that all of our strategies performed significantly better than our test with imagined movement. Although we failed to record the classifier performance during the imagined movement test, we are quite sure it was higher than the classifier performance in the Bayesian test. It was definitely higher than the classifier performance in the semi-random test, which is effectively random with a strong bias for cycling.
+
+We did not find a significant difference in performance between the random strategy and the official Cybathlon times, but this may be due to the small sample sizes. In any case, it seems unlikely that the official Cybathlon racers perform better than the random strategy. The average performance using the cycling strategy lies two standard deviations ahead of the average finalist.
+
+This means that, as it stands, the BCI Race does not meet the Cybathlon's stated goal, "testing the reliability and precision of BCI technology".
 
 ## Planning
 
